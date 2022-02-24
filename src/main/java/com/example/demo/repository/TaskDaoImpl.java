@@ -23,22 +23,16 @@ public class TaskDaoImpl implements TaskDao {
 
 	@Override
 	public List<Task> findAll() {
-
 		String sql = "SELECT task.id, user_id, type_id, title, detail, deadline, "
-				+ "type, comment FROM task "
-				+ "INNER JOIN task_type ON task.type_id = task_type.id";
+						+ "type, comment FROM task "
+						+ "INNER JOIN task_type ON task.type_id = task_type.id";
+		// タスク一覧をMapのListで取得
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
+		// return用の空のListを用意
+		List<Task> list = new ArrayList<Task>();
 
-		//削除してください
-
-		//タスク一覧をMapのListで取得
-		List<Map<String, Object>> resultList = null;
-
-		//return用の空のListを用意
-		List<Task> list = null;
-
-		//二つのテーブルのデータをTaskにまとめる
+		// 2つのテーブルのデータをTaskにまとめる
 		for(Map<String, Object> result : resultList) {
-
 			Task task = new Task();
 			task.setId((int)result.get("id"));
 			task.setUserId((int)result.get("user_id"));
@@ -51,9 +45,9 @@ public class TaskDaoImpl implements TaskDao {
 			type.setId((int)result.get("type_id"));
 			type.setType((String)result.get("type"));
 			type.setComment((String)result.get("comment"));
-
-			//TaskにTaskTypeをセット
-
+			// TaskにTaskTypeをセット
+			task.setTaskType(type);
+			
 			list.add(task);
 		}
 		return list;
@@ -62,12 +56,11 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public Optional<Task> findById(int id) {
 		String sql = "SELECT task.id, user_id, type_id, title, detail, deadline, "
-				+ "type, comment FROM task "
-				+ "INNER JOIN task_type ON task.type_id = task_type.id "
-				+ "WHERE task.id = ?";
-
-		//タスクを一件取得
-		Map<String, Object> result = null;
+						+ "type, comment FROM task "
+						+ "INNER JOIN task_type ON task.type_id = task_type.id "
+						+ "WHERE task.id = ?";
+		// タスクを一件取得
+		Map<String, Object> result = jdbcTemplate.queryForMap(sql, id);
 
 		Task task = new Task();
 		task.setId((int)result.get("id"));
@@ -83,24 +76,32 @@ public class TaskDaoImpl implements TaskDao {
 		type.setComment((String)result.get("comment"));
 		task.setTaskType(type);
 
-		//削除してください
-		Optional<Task> taskOpt = null;
-
-		//taskをOptionalでラップする
+		// taskをOptionalでラップする
+		Optional<Task> taskOpt = Optional.ofNullable(task);
 
 		return taskOpt;
 	}
 
 	@Override
 	public void insert(Task task) {
-		jdbcTemplate.update("INSERT INTO task(user_id, type_id, title, detail, deadline) VALUES(?, ?, ?, ?,?)",
-				 task.getUserId(), task.getTypeId(), task.getTitle(), task.getDetail(), task.getDeadline() );
+		jdbcTemplate.update("INSERT INTO task(user_id, type_id, title, detail, deadline)"
+								+ " VALUES(?, ?, ?, ?, ?)",
+								task.getUserId(), 
+								task.getTypeId(), 
+								task.getTitle(), 
+								task.getDetail(), 
+								task.getDeadline());
 	}
 
 	@Override
 	public int update(Task task) {
-		return jdbcTemplate.update("UPDATE task SET type_id = ?, title = ?, detail = ?,deadline = ? WHERE id = ?",
-				task.getTypeId(), task.getTitle(), task.getDetail(), task.getDeadline(), task.getId() );
+		return jdbcTemplate.update("UPDATE task SET type_id = ?, title = ?, detail = ?, deadline = ?"
+										+ " WHERE id = ?",
+										task.getTypeId(), 
+										task.getTitle(), 
+										task.getDetail(), 
+										task.getDeadline(), 
+										task.getId());
 	}
 
 	@Override

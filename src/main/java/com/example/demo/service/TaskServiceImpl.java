@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.Task;
@@ -24,13 +25,16 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public Optional<Task> getTask(int id) {
-
-		//削除してください
-		Optional<Task> taskOpt = null;
-		return taskOpt;
-
-		//Optional<Task>一件を取得 idが無ければ例外発生　
-
+		/*
+		 * Optional<Task>一件を取得、idが無ければ例外発生
+		 * DB操作における例外は基本はチェック例外になるが、
+		 * Springではこれを非チェック例外としてスローしている
+		 */
+		try {
+			return dao.findById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new TaskNotFoundException("指定されたタスクが存在しません");
+		}
 	}
 
 	@Override
@@ -40,16 +44,18 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public void update(Task task) {
-
-		//Taskを更新　idが無ければ例外発生
-
+		// Taskを更新、idが無ければ例外発生
+		if (dao.update(task) == 0) {
+			throw new TaskNotFoundException("更新するタスクが存在しません");
+		}
 	}
 
 	@Override
 	public void deleteById(int id) {
-
-		//Taskを更新 idがなければ例外発生
-
+		// Taskを更新、idがなければ例外発生
+		if (dao.deleteById(id) == 0) {
+			throw new TaskNotFoundException("削除するタスクが存在しません");
+		}
 	}
 
 	@Override

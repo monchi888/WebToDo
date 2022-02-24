@@ -32,7 +32,6 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-
     /**
      * タスクの一覧を表示します
      * @param taskForm
@@ -41,12 +40,11 @@ public class TaskController {
      */
     @GetMapping
     public String task(TaskForm taskForm, Model model) {
-
-    	//新規登録か更新かを判断する仕掛け
-
-        //Taskのリストを取得する
-
-        model.addAttribute("list", "");
+    	// 新規登録か更新かを判断する仕掛け。true:新規登録
+    	taskForm.setNewTask(true);
+        // Taskのリストを取得する
+    	List<Task> list = taskService.findAll(); 
+        model.addAttribute("list", list);
         model.addAttribute("title", "タスク一覧");
 
         return "task/index";
