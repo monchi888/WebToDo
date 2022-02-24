@@ -63,15 +63,27 @@ public class TaskController {
         BindingResult result,
         Model model) {
 
+        // TaskFormのデータをTaskに格納
+//      Task task = new Task();
+//      task.setUserId(1);
+//      task.setTypeId(taskForm.getTypeId());
+//      task.setTitle(taskForm.getTitle());
+//      task.setDetail(taskForm.getDetail());
+//      task.setDeadline(taskForm.getDeadline());
+    	
+        /*
+         * このクラスの下の方にmakeTaskというメソッドを
+         * 作成してあるのでそれを使用する
+         * 作成してある目的は次の通り
+         * クラス内で重複したり煩雑になりそうな処理は
+         * privateメソッドにしてコントローラの可読性を上げたり
+         * メンテナンスしやすくする
+         */
+        Task task = makeTask(taskForm, 0);
         if (!result.hasErrors()) {
-        	//削除してください
-        	Task task = null;
-
-        	//TaskFormのデータをTaskに格納
-
-        	//一件挿入後リダイレクト
-
-            return "";
+        	// 一件挿入後リダイレクト
+        	taskService.insert(task);
+            return "redirect:/task";
         } else {
             taskForm.setNewTask(true);
             model.addAttribute("taskForm", taskForm);
