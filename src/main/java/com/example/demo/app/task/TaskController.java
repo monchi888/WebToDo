@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +29,7 @@ public class TaskController {
 
     private final TaskService taskService;
 
+    @Autowired
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
@@ -100,6 +102,7 @@ public class TaskController {
      * @param id
      * @param model
      * @return
+     * @PathVariable：/{id}のように/以降に入力された文字列を取得
      */
     @GetMapping("/{id}")
     public String showUpdate(
@@ -107,13 +110,18 @@ public class TaskController {
         @PathVariable int id,
         Model model) {
 
-    	//Taskを取得(Optionalでラップ)
+    	// Taskを取得(Optionalでラップ)
+    	Optional<Task> taskOpt = taskService.getTask(id);
 
-        //TaskFormへの詰め直し
+        // TaskFormへの詰め直し
+    	Optional<TaskForm> taskFormOpt = taskOpt.map(t -> makeTaskForm(t));
 
-        //TaskFormがnullでなければ中身を取り出し
+        // TaskFormがnullでなければ中身を取り出し
+        if(taskFormOpt.isPresent()) {
+        	taskForm = taskFormOpt.get();
+        }
 
-        model.addAttribute("taskForm", "");
+        model.addAttribute("taskForm", taskForm);
         List<Task> list = taskService.findAll();
         model.addAttribute("list", list);
         model.addAttribute("taskId", id);
@@ -139,14 +147,17 @@ public class TaskController {
     	RedirectAttributes redirectAttributes) {
 
         if (!result.hasErrors()) {
-        	//TaskFormのデータをTaskに格納
+        	// TaskFormのデータをTaskに格納
+        	Task task = makeTask(taskForm, taskId);
 
-        	//更新処理、フラッシュスコープの使用、リダイレクト（個々の編集ページ）
-
-            return "" ;
+        	// 更新処理、フラッシュスコープの使用、リダイレクト（個々の編集ページ）
+        	taskService.update(task);
+        	redirectAttributes.addFlashAttribute("complete", "変更が完了しました");
+        	return "redirect:/task/" + taskId;
         } else {
             model.addAttribute("taskForm", taskForm);
-            model.addAttribute("title", "タスク一覧");
+            model.addAttribute("taskId", taskId);
+            model.addAttribute("title", "更新用フォーム");
             return "task/index";
         }
     }
@@ -162,9 +173,9 @@ public class TaskController {
     	@RequestParam("taskId") int id,
     	Model model) {
 
-    	//タスクを一件削除しリダイレクト
-
-        return "";
+    	// タスクを一件削除しリダイレクト
+    	taskService.deleteById(id);
+        return "redirect:/task/";
     }
 
     /**

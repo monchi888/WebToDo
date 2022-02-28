@@ -8,9 +8,8 @@
 <body>
 <h1 th:text="${title}">ようこそ</h1>
 <p th:if="${complete}" th:text="${complete}"></p>
-
 <!-- isNewTaskの値がtrue(:新規登録)かfalse(:更新)かでPOST先を切り替えている -->
-<form method="POST" th:action="${taskForm.isNewTask}? @{/task/insert} : @{/task/update}" th:object="${taskForm}">
+<form method="POST" th:action="${taskForm.newTask}? @{/task/insert} : @{/task/update}" th:object="${taskForm}">
 	<label>タスクタイプ（選択してください）：</label>
 	<select name="typeId">
 	<option value="1" th:selected="*{typeId == 1}">緊急</option>
@@ -31,7 +30,7 @@
 	<input  th:if="${taskId}" type="hidden" name="taskId" th:value="${taskId}">
 	<input type="submit" value="送信">
 </form>
-<div th:if="${taskForm.isNewTask}" style="margin:10px">
+<div th:if="${taskForm.newTask}" style="margin:10px">
 <h3>タスク　編集削除</h3>
 <table>
 	<tr th:each="obj : ${list}">
