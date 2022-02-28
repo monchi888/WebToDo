@@ -18,19 +18,23 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.example.demo.entity.Task;
 import com.example.demo.repository.TaskDao;
 
+// JUnit5にMockitoという拡張機能を統合する
 @ExtendWith(MockitoExtension.class)
 @DisplayName("TaskServiceImplの単体テスト")
 class TaskServiceImplUnitTest {
 
-    @Mock // モック(stub)クラス ダミーオブジェクト
+	// モック(stub)クラス：ダミーオブジェクト
+	@Mock
     private TaskDao dao;
 
-    @InjectMocks // テスト対象クラス　モックを探す newする
+	// テスト対象クラス：モックを探しnewする
+	@InjectMocks
     private TaskServiceImpl taskServiceImpl;
 
-    @Test // テストケース
+	// テストケース
+	@Test
+    // テスト名
     @DisplayName("テーブルtaskの全件取得で0件の場合のテスト")
-        // テスト名
     void testFindAllReturnEmptyList() {
 
     	//空のリスト
