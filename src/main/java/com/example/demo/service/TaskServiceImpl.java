@@ -34,6 +34,11 @@ public class TaskServiceImpl implements TaskService {
 		 */
 		try {
 			return dao.findById(id);
+		/*
+		 * タスクが存在しない場合には通常EmptyResultDataAccessExceptionが
+		 * 発生するのだが、今回はその例外の代わりにTaskNotFoundExceptionが
+		 * スローされるような仕組みにしてある
+		 */
 		} catch (EmptyResultDataAccessException e) {
 			throw new TaskNotFoundException("指定されたタスクが存在しません");
 		}

@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -13,9 +12,12 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.example.demo.entity.Task;
 
-@SpringJUnitConfig //Junit5上でSpring TestContext Frameworkを利用することを示す
-@SpringBootTest //毎回サーバ起動
-@ActiveProfiles("unit")//application-unit.ymlのunitを対応（DBの設定を読み込む）
+// Junit5上でSpring TestContext Frameworkを利用することを示す
+@SpringJUnitConfig
+// 毎回サーバ起動
+@SpringBootTest
+// application-unit.ymlのunitを対応（DBの設定を読み込む）
+@ActiveProfiles("unit")
 @DisplayName("TaskServiceImplの結合テスト")
 class TaskServiceImplTest {
 

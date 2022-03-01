@@ -9,4 +9,4 @@
 		- hard time with newTask or isNewTask
 - 2022/03/01
 	- No.66 start<br>
-	
+	- Reflection of lecture contents up to No.67
