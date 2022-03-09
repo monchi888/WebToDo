@@ -1,5 +1,8 @@
 package com.example.demo.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +15,14 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.example.demo.entity.Task;
 
-// Junit5上でSpring TestContext Frameworkを利用することを示す
+/*
+ * Junit5上でSpring TestContext Frameworkを利用することを示す
+ * @SpringJUnitConfigは
+ * @ExtendWith(SpringExtension.class)と
+ * @ContextConfigurationをまとめたもの
+ * Spring TestContext Framework(TCF)という
+ * Springのアノテーションでテストできる機能を利用できるようになります
+ */
 @SpringJUnitConfig
 // 毎回サーバ起動
 @SpringBootTest
@@ -31,25 +41,29 @@ class TaskServiceImplTest {
         try {
         	Optional<Task> task = taskService.getTask(0);
         } catch (TaskNotFoundException e) {
-        	Assertions.assertEquals(e.getMessage(), "指定されたタスクが存在しません");
+        	Assertions.assertEquals(e.getMessage(),
+        				"指定されたタスクが存在しません");
         }
     }
 
     @Test//order byがある場合は順序の確認をすることがある
     @DisplayName("全件検索のテスト")
     void testFindAllCheckCount() {
-    	//全件取得
+    	// 全件取得
+    	List<Task> list = taskService.findAll();
 
-        //Taskテーブルに入っている2件が取得できているか確認
-
+        // Taskテーブルに入っている2件が取得できているか確認
+    	assertEquals(2, list.size());
     }
 
     @Test
     @DisplayName("1件のタスクが取得できた場合のテスト")
     void testGetTaskFormReturnOne() {
-    	//idが1のTaskを取得
+    	// idが1のTaskを取得
+    	Optional<Task> taskOpt = taskService.getTask(1);
 
-        //取得できたことを確認
+        // 取得できたことを確認
+    	assertEquals("JUnitを学習", taskOpt.get().getTitle());
     }
 
 }

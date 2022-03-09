@@ -10,3 +10,8 @@ Inquiry & Survey URL: http://localhost:9000/task/
 - 2022/03/01
 	- No.66 start<br>
 	- Reflection of lecture contents up to No.67
+- 2022/03/09
+	- Reflection of lecture contents up to No.70
+		- No.70 Git & GitHub, JUnit5, Spring Data(JPA) or MyBatis
+	- Reflection of lecture contents up to No.73
+	
