@@ -17,11 +17,11 @@ import com.example.demo.entity.Task;
 
 /*
  * Junit5上でSpring TestContext Frameworkを利用することを示す
- * @SpringJUnitConfigは
- * @ExtendWith(SpringExtension.class)と
+ * 
+ * @SpringJUnitConfigは@ExtendWith(SpringExtension.class)と
  * @ContextConfigurationをまとめたもの
- * Spring TestContext Framework(TCF)という
- * Springのアノテーションでテストできる機能を利用できるようになります
+ * Spring TestContext Framework(TCF)というSpringのアノテーションで
+ * テストできる機能を利用できるようになります
  */
 @SpringJUnitConfig
 // 毎回サーバ起動
